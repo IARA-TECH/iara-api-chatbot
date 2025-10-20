@@ -1,10 +1,10 @@
 from sqlalchemy import Column, Date, DateTime, Integer, String, text
 from sqlalchemy.dialects.postgresql import UUID
+
 from ..database import Base
 
-
 class UserAccount(Base):
-    __tablename__ = "User_Account"
+    __tablename__ = "user_account"
 
     pk_uuid = Column(UUID(as_uuid=True), primary_key=True, server_default=text("uuid_generate_v4()"))
     created_at = Column(DateTime, nullable=False, server_default=text("current_timestamp"))

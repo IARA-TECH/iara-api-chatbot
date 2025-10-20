@@ -1,14 +1,12 @@
 import os
-from typing import Annotated
 
 from beanie import init_beanie
 from dotenv import load_dotenv
-from fastapi import Depends
 from pymongo import AsyncMongoClient
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, declarative_base, sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker
 
-from .enteties import Session as SessionDocument
+from .entities.session import Session as SessionDocument
 
 load_dotenv()
 
@@ -29,5 +27,3 @@ def get_db():
         yield db
     finally:
         db.close()
-        
-DbSession = Annotated[Session, Depends(get_db)]
