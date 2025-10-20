@@ -55,13 +55,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     try:
-        payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=[os.getenv('ALGORITHM')])
-        user_uuid = payload.get('sub')
-        if user_uuid is None:
+        payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=[os.getenv('ALGORITHM')], options={"verify_exp": True})
+        user_id = payload.get('sub')
+        if user_id is None:
             raise UnauthorizedError()
     except InvalidTokenError:
         raise UnauthorizedError()
-    user = db.query(UserAccount).filter(UserAccount.pk_uuid == user_uuid, UserAccount.deactivated_at == None).first()
+    user = db.query(UserAccount).filter(UserAccount.pk_uuid == user_id, UserAccount.deactivated_at == None).first()
     if user is None:
         raise NotFoundError(name='Usuário')
     return user

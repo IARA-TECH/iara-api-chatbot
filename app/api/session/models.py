@@ -1,12 +1,12 @@
-from uuid import UUID
-
 from pydantic import BaseModel
 
-class CreateInput(BaseModel):
-    user_id: UUID
+from beanie import PydanticObjectId
+
+class CreateData(BaseModel):
+    session_id: PydanticObjectId
 
 class CreateResponse(BaseModel):
-    session_id: UUID
+    response: CreateData
 
 class DeleteInput(BaseModel):
-    session_id: UUID
+    session_id: PydanticObjectId
