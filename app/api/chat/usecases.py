@@ -7,7 +7,6 @@ from ...shared.database.entities.session import Chat, Session
 
 from . import models
 
-
 async def get_history(session_id:UUID) -> list|bool:
     session = await Session.find_one(Session.id==session_id)
     if not session:
