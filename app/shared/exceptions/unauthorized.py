@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 
+
 class UnauthorizedError(HTTPException):
     def __init__(self):
         message = f"Usuário sem acesso"

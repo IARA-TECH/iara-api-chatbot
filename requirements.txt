@@ -9,5 +9,7 @@ langchain-core
 langchain-community
 langchain_text_splitters 
 google.generativeai
+pypdf
 isort
+black
 pyjwt

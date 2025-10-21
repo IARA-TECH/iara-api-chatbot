@@ -5,12 +5,14 @@ from uuid import UUID
 from beanie import Document
 from pydantic import BaseModel, Field
 
+
 class Chat(BaseModel):
     user_message: str
     response: str
     agent_id: int
     sent_at: datetime
     total_tokens: int
+
 
 class Session(Document):
     user_id: UUID

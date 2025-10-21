@@ -18,13 +18,14 @@ from . import models
 
 load_dotenv()
 
+
 def verify_password(plain_password, hashed_password) -> bool:
     return bcrypt.checkpw(
-        plain_password.encode('utf-8'),
-        hashed_password.encode('utf-8')
+        plain_password.encode("utf-8"), hashed_password.encode("utf-8")
     )
 
-def authenticate_user(db: Session, email: str, password: str) -> UserAccount|bool:
+
+def authenticate_user(db: Session, email: str, password: str) -> UserAccount | bool:
     user = db.query(UserAccount).filter(UserAccount.email == email).first()
     if not user:
         return False
@@ -32,36 +33,55 @@ def authenticate_user(db: Session, email: str, password: str) -> UserAccount|boo
         return False
     return user
 
+
 def create_token(data: dict, expires_delta: timedelta | None = None) -> str:
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
-    to_encode.update({'exp': expire})
-    encoded_jwt = jwt.encode(to_encode, os.getenv('SECRET_KEY'), algorithm=os.getenv('ALGORITHM'))
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(
+        to_encode, os.getenv("SECRET_KEY"), algorithm=os.getenv("ALGORITHM")
+    )
     return encoded_jwt
+
 
 async def login(db: Session, email: str, password: str) -> models.LoginData:
     user = authenticate_user(db=db, email=email, password=password)
     if not user:
-        raise NotFoundError(name='Usuário')
-    
-    access_token_expires = timedelta(minutes=int(os.getenv('TOKEN_EXPIRE_MINUTES')))
-    access_token = create_token(data={'sub':str(user.pk_uuid)}, expires_delta=access_token_expires)
-    return {'access_token': access_token, 'token_type':'bearer'}
+        raise NotFoundError(name="Usuário")
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
+    access_token_expires = timedelta(minutes=int(os.getenv("TOKEN_EXPIRE_MINUTES")))
+    access_token = create_token(
+        data={"sub": str(user.pk_uuid)}, expires_delta=access_token_expires
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+async def get_current_user(
+    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+):
     try:
-        payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=[os.getenv('ALGORITHM')], options={"verify_exp": True})
-        user_id = payload.get('sub')
+        payload = jwt.decode(
+            token,
+            os.getenv("SECRET_KEY"),
+            algorithms=[os.getenv("ALGORITHM")],
+            options={"verify_exp": True},
+        )
+        user_id = payload.get("sub")
         if user_id is None:
             raise UnauthorizedError()
     except InvalidTokenError:
         raise UnauthorizedError()
-    user = db.query(UserAccount).filter(UserAccount.pk_uuid == user_id, UserAccount.deactivated_at == None).first()
+    user = (
+        db.query(UserAccount)
+        .filter(UserAccount.pk_uuid == user_id, UserAccount.deactivated_at == None)
+        .first()
+    )
     if user is None:
-        raise NotFoundError(name='Usuário')
+        raise NotFoundError(name="Usuário")
     return user
