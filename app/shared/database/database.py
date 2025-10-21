@@ -7,13 +7,14 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 from .entities.session import Session as SessionDocument
+from .entities.embedding import Embedding
 
 load_dotenv()
 
 async def init():
     client = AsyncMongoClient(os.getenv('DB_MONGO_URL'))
     database = client.get_database(os.getenv("DB_MONGO_DATABASE"))
-    await init_beanie(database=database, document_models=[SessionDocument])
+    await init_beanie(database=database, document_models=[SessionDocument, Embedding])
 
 engine = create_engine(os.getenv("DB_SQL_URL"))
 
