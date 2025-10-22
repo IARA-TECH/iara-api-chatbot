@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+beanie
+python-dotenv
+python-multipart
+langchain
+langchain-google-genai
+langchain-core 
+langchain-community
+langchain_text_splitters 
+google.generativeai
+pypdf
+isort
+black
+pyjwt
