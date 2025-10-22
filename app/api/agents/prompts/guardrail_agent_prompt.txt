@@ -1,0 +1,4 @@
+essa resposta contém algum tipo de conteúdo explícito?
+se sim retorne false em is_valid e reescreva uma resposta para o usuário
+se não retorne true em is_valid
+{response}

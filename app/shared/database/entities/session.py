@@ -11,7 +11,6 @@ class Chat(BaseModel):
     response: str
     agent_id: int
     sent_at: datetime
-    total_tokens: int
 
 
 class Session(Document):

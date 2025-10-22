@@ -8,7 +8,7 @@ class RespondInput(BaseModel):
 
 
 class RespondData(BaseModel):
-    agent_response: str
+    response: str
 
 
 class RespondResponse(BaseModel):

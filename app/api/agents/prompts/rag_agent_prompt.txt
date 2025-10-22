@@ -1,0 +1,2 @@
+{rag}
+com essas informacoes escreva uma respota para o usuário

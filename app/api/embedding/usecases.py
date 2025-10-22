@@ -11,6 +11,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from ...shared.database.entities.embedding import Embedding
 from ...shared.exceptions.bad_request import BadRequestError
 from ...shared.exceptions.internal_server_error import InternalServerError
+from . import models
 
 load_dotenv()
 
@@ -39,7 +40,7 @@ async def save(text: str, document_name: str) -> None:
             raise InternalServerError("criar embedding")
 
 
-async def upload(file: UploadFile):
+async def upload(file: UploadFile) -> None:
     with tempfile.NamedTemporaryFile(delete=False, suffix=file.filename) as temp_file:
         temp_file.write(await file.read())
         temp_path = temp_file.name
@@ -56,11 +57,12 @@ async def upload(file: UploadFile):
         raise BadRequestError("arquivo deve ser um pdf ou txt")
 
     await save(text=text, document_name=file.filename)
+    return
 
 
 def get_embedding(
     text: str, limit: int = 5, num_candidates: int = 150
-) -> list[dict[str, str]]:
+) -> list[models.GetEmbeddingData]:
     client = pymongo.MongoClient(os.getenv("DB_MONGO_URL"))
     embedded_query = create_embedding(text)["embedding"]
     pipeline = [

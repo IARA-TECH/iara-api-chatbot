@@ -29,7 +29,7 @@ class StructuredOutputAgent:
         ).with_structured_output(structured_output)
         self.__system_prompt = system_prompt
 
-    def invoke(self, user_message: str, history: list = [], format: dict = {}) -> dict:
+    def execute(self, user_message: str, history: list = [], format: dict = {}) -> dict:
         prompt = ChatPromptTemplate.from_messages(
             [("system", self.__system_prompt), *history, ("human", user_message)]
         )

@@ -2,9 +2,8 @@ from datetime import datetime
 from uuid import UUID
 
 from ...shared.database.entities.session import Chat, Session
-
-# from ..agents.usecases import
 from ...shared.exceptions.not_found import NotFoundError
+from ..agents.usecases import create_response
 from . import models
 
 
@@ -35,10 +34,9 @@ async def respond(
         raise NotFoundError(name="Sessão")
 
     history = await get_history(session_id=session_id)
-    result = {"response": "oi", "total_tokens": 2, "agent_id": 1}
+    result = create_response(user_message=user_message, history=history)
 
     response = result["response"]
-    total_tokens = result["total_tokens"]
     agent_id = result["agent_id"]
 
     chat = Chat(
@@ -46,7 +44,6 @@ async def respond(
         response=response,
         agent_id=agent_id,
         sent_at=datetime.now(),
-        total_tokens=total_tokens,
     )
 
     if session.chats:
@@ -56,4 +53,4 @@ async def respond(
 
     await session.save()
 
-    return {"agent_response": response}
+    return {"response": response}

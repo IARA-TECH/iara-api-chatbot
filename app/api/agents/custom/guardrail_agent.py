@@ -32,18 +32,7 @@ class GuardrailAgent(StructuredOutputAgent):
         self, user_message: str, agent_response: str, history: list = []
     ) -> dict:
         format = {"response": agent_response}
-        result = super().invoke(
+        result = super().execute(
             user_message=user_message, history=history, format=format
         )
-
-        if result.is_valid == False:
-            if "new_response" in result:
-                new_response = result.new_response
-            else:
-                raise InternalServerError("criar mensagem para usuário")
-
-            return {"is_valid": result.is_valid, "new_response": new_response}
-        else:
-            return {
-                "is_valid": result.is_valid,
-            }
+        return result
