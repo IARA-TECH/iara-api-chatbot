@@ -42,9 +42,7 @@ def create_token(
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(
-        to_encode, os.getenv("SECRET_KEY"), algorithm=os.getenv("ALGORITHM")
-    )
+    encoded_jwt = jwt.encode(to_encode, secret_key, algorithm=os.getenv("ALGORITHM"))
     return encoded_jwt
 
 
@@ -61,7 +59,7 @@ async def login(db: Session, email: str, password: str) -> models.LoginData:
     )
     refresh_token_expires = timedelta(hours=int(os.getenv("REFRESH_TOKEN_EXPIRE")))
     refresh_token = create_token(
-        data={"sub": str(user.pk_uuid), "password": user.password},
+        data={"sub": str(user.pk_uuid), "password": password},
         expires_delta=refresh_token_expires,
         secret_key=os.getenv("REFRESH_SECRET_KEY"),
     )
@@ -83,12 +81,14 @@ async def refresh(db: Session, refresh_token: str) -> models.refreshData:
     if not user_id or not password:
         raise UnauthorizedError()
 
-    user = db.query(UserAccount).filter(
-        UserAccount.pk_uuid == user_id, UserAccount.password == password
+    user = (
+        db.query(UserAccount)
+        .filter(UserAccount.pk_uuid == user_id, UserAccount.password == password)
+        .first()
     )
     if not user:
         raise UnauthorizedError()
-
+    
     access_token_expires = timedelta(hours=int(os.getenv("ACCESS_TOKEN_EXPIRE")))
     access_token = create_token(
         data={"sub": str(user.pk_uuid)},
