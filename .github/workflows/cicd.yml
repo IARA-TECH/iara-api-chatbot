@@ -1,4 +1,4 @@
-name: CI/CD Pipeline - Python Chatbot API
+name: CI/CD Pipeline - iara-api-chatbot
 
 on:
   push:
@@ -18,19 +18,12 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Cache do pip
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
       - name: Instalar dependências
+        working-directory: iara-api-chatbot
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          
+
       - name: Login no Docker Hub
         uses: docker/login-action@v3
         with:
@@ -39,10 +32,10 @@ jobs:
 
       - name: Build e Push da imagem Docker
         run: |
-          IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/chatbot-api
+          IMAGE_NAME=${{ secrets.DOCKER_USERNAME }}/iara-api-chatbot
           IMAGE_TAG=${{ github.sha }}
           echo "Construindo imagem Docker: $IMAGE_NAME:$IMAGE_TAG"
-          docker build -t $IMAGE_NAME:$IMAGE_TAG -t $IMAGE_NAME:latest .
+          docker build -f iara-api-chatbot/Dockerfile -t $IMAGE_NAME:$IMAGE_TAG -t $IMAGE_NAME:latest iara-api-chatbot
           echo "Enviando imagem para o Docker Hub..."
           docker push $IMAGE_NAME:$IMAGE_TAG
           docker push $IMAGE_NAME:latest
