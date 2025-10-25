@@ -26,8 +26,10 @@ def create_embedding(text: str) -> dict:
 
 
 async def save(text: str, document_name: str) -> None:
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=200)
-    parts = text_splitter.split_text(text)
+    import re
+    parts = re.split(r'(?=Pergunta)', text)
+    parts.pop(0)
+    print(parts)
     for idx, part in enumerate(parts):
         embedding = create_embedding(part)["embedding"]
         try:
@@ -50,7 +52,7 @@ async def upload(file: UploadFile) -> None:
         docs = loader.load()
         text = "\n".join([d.page_content for d in docs])
 
-    elif file.content_type == "application/pdf":
+    elif file.content_type == "text/plain":
         text = open(temp_path, "r", encoding="utf-8").read()
 
     else:

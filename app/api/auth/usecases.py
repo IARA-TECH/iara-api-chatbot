@@ -51,7 +51,7 @@ async def login(db: Session, email: str, password: str) -> models.LoginData:
     if not user:
         raise NotFoundError(name="Usuário")
 
-    access_token_expires = timedelta(minutes=int(os.getenv("ACCESS_TOKEN_EXPIRE")))
+    access_token_expires = timedelta(hours=int(os.getenv("ACCESS_TOKEN_EXPIRE")))
     access_token = create_token(
         data={"sub": str(user.pk_uuid)},
         expires_delta=access_token_expires,
@@ -117,7 +117,7 @@ async def get_current_user(
     try:
         payload = jwt.decode(
             token,
-            os.getenv("SECRET_KEY"),
+            os.getenv("ACCESS_SECRET_KEY"),
             algorithms=[os.getenv("ALGORITHM")],
             options={"verify_exp": True},
         )
