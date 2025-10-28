@@ -98,15 +98,15 @@ uvicorn app.main:app --reload
 
 ### 🔹 Principais Endpoints
 
-|  Método  | Endpoint            | Descrição                                               |
-| :------: | :------------------ | :------------------------------------------------------ |
-|  `POST`  | `/auth/login`       | Realiza login e gera token JWT                          |
-|  `POST`  | `/auth/verify`      | Valida token de autenticação                            |
-|  `POST`  | `/chat`             | Envia mensagem do usuário e retorna resposta do chatbot |
-|  `POST`  | `/embedding/upload` | Faz upload de arquivos de embeddings                    |
-|   `GET`  | `/session/all`      | Lista todas as sessões de conversas                     |
-| `DELETE` | `/session/{id}`     | Exclui uma sessão específica                            |
-|   `GET`  | `/docs`             | Acessa a documentação interativa (Swagger UI)           |
+|  Método   | Endpoint            | Descrição                                               |
+| :-------: | :-----------------: | :-----------------------------------------------------: |
+|  `POST`   | `/auth/login`       | Realiza login e gera token JWT                          |
+|  `POST`   | `/auth/verify`      | Valida token de autenticação                            |
+|  `POST`   | `/chat`             | Envia mensagem do usuário e retorna resposta do chatbot |
+|  `POST`   | `/embedding/upload` | Faz upload de arquivos de embeddings                    |
+|  `GET`    | `/session/all`      | Lista todas as sessões de conversas                     |
+|  `DELETE` | `/session/{id}`     | Exclui uma sessão específica                            |
+|  `GET`    | `/docs`             | Acessa a documentação interativa (Swagger UI)           |
 
 ---
 
