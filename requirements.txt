@@ -3,9 +3,9 @@ uvicorn
 beanie
 python-dotenv
 python-multipart
-langchain
-langchain-google-genai
-langchain-core 
+langchain>=0.2.14
+langchain-core>=0.2.26
+langchain-google-genai>=1.0.5
 langchain-community
 langchain_text_splitters 
 google.generativeai
