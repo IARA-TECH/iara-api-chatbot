@@ -5,12 +5,15 @@ from fastapi import FastAPI
 
 from .api.api import register_routes
 from .shared.database.database import init
+from app.scheduler.keep_alive import keep_alive
+import asyncio
 
 load_dotenv()
 
 
 async def startup():
     await init()
+    asyncio.create_task(keep_alive())
 
 
 app = FastAPI(on_startup=[startup])
