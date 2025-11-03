@@ -18,4 +18,4 @@ class RagAgent(DefaultAgent):
             .execute(user_message=user_message, history=history, format=format)
             .content
         )
-        return result
+        return {"result": result, "rag": embeddings}

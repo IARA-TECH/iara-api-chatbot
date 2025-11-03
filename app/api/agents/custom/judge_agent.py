@@ -6,9 +6,9 @@ from ....shared.exceptions.internal_server_error import InternalServerError
 from ..templates.structured_output_agent import StructuredOutputAgent
 
 
-class GuardrailAgent(StructuredOutputAgent):
+class JudgeAgent(StructuredOutputAgent):
     def __init__(
-        self, prompt_path: str = "app/api/agents/prompts/guardrail_agent_prompt.txt"
+        self, prompt_path: str = "app/api/agents/prompts/judge_agent_prompt.txt"
     ):
         system_prompt = open(prompt_path, "r", encoding="utf-8").read()
 
@@ -29,9 +29,9 @@ class GuardrailAgent(StructuredOutputAgent):
         )
 
     def validate_response(
-        self, user_message: str, agent_response: str, history: list = []
+        self, user_message: str, agent_response: str, rag= list| str, history: list = [],
     ) -> dict:
-        format = {"response": agent_response}
+        format = {"response": agent_response, "rag":rag}
         result = super().execute(
             user_message=user_message, history=history, format=format
         )
