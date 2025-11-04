@@ -38,9 +38,9 @@ def create_response(user_message: str, history: list = []) -> models.CreateRespo
     print(f"----------------------------------validation: {validation}")
 
     if validation.is_valid == False:
-        if "new_response" not in validation:
+        if not hasattr(validation, "new_response"):
             raise InternalServerError("gerar mensagem para usuário")
         response = validation.new_response
-        agent_id = AgentTypeEnum.judge_agent
+        agent_id = AgentTypeEnum.JUDGE_AGENT
 
     return {"response": response, "agent_id": agent_id}
